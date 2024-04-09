@@ -6,6 +6,42 @@ from bson import ObjectId
 
 router = APIRouter()
 
+@router.get("/", response_model=dict, include_in_schema=False)
+async def homepage():
+    return {
+        "message": "Welcome to the Library Management System API!",
+        "description": "This API allows you to manage students within the library system.",
+        "documentation_url": "base_url/docs",
+        "backend_access": "To access the backend documentation, visit 'base_url/docs'.",
+        "endpoints": [
+            {
+                "method": "POST",
+                "path": "/students",
+                "description": "Create a new student in the system. All fields are mandatory."
+            },
+            {
+                "method": "GET",
+                "path": "/students",
+                "description": "Retrieve a list of students with optional filters."
+            },
+            {
+                "method": "GET",
+                "path": "/students/{id}",
+                "description": "Retrieve details of a specific student by ID."
+            },
+            {
+                "method": "PATCH",
+                "path": "/students/{id}",
+                "description": "Update a student's properties based on provided information."
+            },
+            {
+                "method": "DELETE",
+                "path": "/students/{id}",
+                "description": "Delete a student from the system by ID."
+            }
+        ]
+    }
+
 
 @router.post("/students", response_model=dict, status_code=201, description="API to create a student in the system. All fields are mandatory and required while creating the student in the system.")
 async def create_student(student: Student):
