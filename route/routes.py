@@ -47,7 +47,10 @@ async def homepage():
 async def create_student(student: Student):
     result = myCol.insert_one(student.dict())
     if result.inserted_id:
-        return {"id": str(result.inserted_id)}
+        return {
+            "status": "ok",
+            "id": str(result.inserted_id)
+            }
     else:
         raise HTTPException(status_code=500, detail="Failed to create student")
 
@@ -62,7 +65,10 @@ async def list_students(country: str = Query(None,description="To apply filter o
         
     serialized_students = students_list_serializer(myCol.find(query))
     
-    return {"data": serialized_students}
+    return {
+        "status": "ok",
+        "data": serialized_students
+        }
 
 
 @router.get("/students/{id}", response_model=dict)
@@ -83,6 +89,6 @@ async def update_student(id: str, student1: PatchStudent):
 async def delete_student(id: str = Path(...)):
     result = myCol.delete_one({"_id": ObjectId(id)})
     if result.deleted_count == 1:
-        return {}
+        return {"status":"ok"}
     else:
         raise HTTPException(status_code=404, detail="Student not found")
